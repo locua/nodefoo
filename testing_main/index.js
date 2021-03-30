@@ -3,6 +3,7 @@ var app=express();
 app.set('view engine','jade');
 
 
+
 //app.get('/',function(req,res)
 //{
 //  res.send('Hello World!');
@@ -24,6 +25,6 @@ app.get('/',function(req,res){
       {title:'MyTitle',message:'Wilkommen'})
 });
 
-var server=app.listen(3000,function() {});
+var server=app.listen(3000,function() {}); 
 
 console.log("Serving on port 3000");
