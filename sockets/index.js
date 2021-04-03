@@ -2,11 +2,11 @@ var express = require('express');
 var socket = require('socket.io');
 
 var app = express();
-var server = app.listen(3000);
+var server = app.listen(3333);
 
 app.use(express.static('public'));
 
-console.log("server running on port blah blah");
+console.log("server running on port 3333");
 
 var io = socket(server);
 io.sockets.on('connection', newConnection);
@@ -16,7 +16,7 @@ function newConnection(socket){
   console.log(socket.id);
   socket.on('mouse', mouseMsg);
   function mouseMsg(data) {
-    console.log(data);
+    //console.log(data);
     socket.broadcast.emit('mouse', data);
 
     // io.sockets.emit('mouse', data); // emits back to self

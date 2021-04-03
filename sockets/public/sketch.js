@@ -1,10 +1,13 @@
 var socket;
 
 function setup() {
-  createCanvas(400, 400);
-  background(0);
+  let cnv = createCanvas(400, 400);
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  cnv.position(x, y);
 
-  socket = io.connect('http://localhost:3000');
+  background(0);
+  socket = io.connect('https://node.louisjames.net');
   socket.on('mouse', newDrawing);
 }
 
