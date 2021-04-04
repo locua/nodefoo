@@ -16,6 +16,12 @@ function newConnection(socket){
   console.log(socket.id);
   socket.on('mouse', mouseMsg);
   socket.on('player', playerMsg);  
+  socket.on('clientJoined', clientJoined);
+
+  function clientJoined(data){
+    socket.broadcast.emit('clientJoined', {id:socket.id, x:data.x, y:data.y})
+  }
+
   
   function playerMsg(data){
     socket.broadcast.emit('player', data); 

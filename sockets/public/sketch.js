@@ -2,6 +2,8 @@ var socket;
 let w = h = 800
 let posX = getRandInt(w);
 let posY = getRandInt(h);
+let player=false;
+let playerDictionary = {};
 
 function getRandInt(max){
   return Math.floor(Math.random()*max);
@@ -19,15 +21,23 @@ function setup() {
   socket.on('mouse', newDrawing);
   socket.on('player', drawPlayer);
   socket.on('playerGone', playerDisconnected);
+  socket.on('clientJoined', createPlayer);
+  socket.emit('clientJoined', {x:posX, y:posY});
+
+  playerDictionary["0"] = new Player(posX, posY);
+
 }
+
+function createPlayer(data){
+  playerDictionary[data.id] = Player(data.x, data.y);
+}
+
 function playerDisconnected(data){
   background(0); 
 }
 
 function drawPlayer(data){
-  noStroke();
-  fill(0, 0, 200);  
-  ellipse(data.x, data.y, 30, 30);
+  player=true;
 }
 
 function newDrawing(data){
@@ -40,6 +50,7 @@ function update(){
 }
 
 function draw() {
+  background(0);
   if (keyIsDown(LEFT_ARROW)) {
     posX -= 5;
   }
@@ -53,6 +64,10 @@ function draw() {
     posY += 5;
   }
   
+  noStroke();
+  fill(0, 0, 200);  
+  //ellipse(data.x, data.y, 30, 30);
+
   noStroke();
   socket.emit('player', {x:posX, y:posY});
   fill(0, 200, 0);
@@ -70,3 +85,12 @@ function mouseDragged(){
   socket.emit('mouse', data);
 }
 
+class Player {
+  constructor(x, y){
+  this.x = x;
+  this.y = y;
+  }
+  draw(){
+    ellipse(this.x, this.y,30,30);
+  }
+}
