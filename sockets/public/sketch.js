@@ -14,7 +14,6 @@ function setup() {
   socket.on('mouse', newDrawing);
   socket.on('player', drawPlayer);
   socket.on('playerGone', playerDisconnected);
-
 }
 function playerDisconnected(data){
   background(0); 
@@ -32,10 +31,21 @@ function newDrawing(data){
 }
 
 function update(){
-
 }
 
 function draw() {
+  if (keyIsDown(LEFT_ARROW)) {
+    posX -= 5;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    posX += 5;
+  }
+  if (keyIsDown(UP_ARROW)) {
+    posY -= 5;
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    posY += 5;
+  }
   socket.emit('player', {x:posX, y:posY});
   fill(0, 200, 0);
   ellipse(posX, posY, 30, 30);
@@ -51,3 +61,4 @@ function mouseDragged(){
   }
   socket.emit('mouse', data);
 }
+
