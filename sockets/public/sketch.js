@@ -8,7 +8,12 @@ function getRandInt(max){
 }
 
 function setup() {
-  createCanvas(w, h);
+  let cnv = createCanvas(w, h);
+  cnv.setPosition
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  cnv.position(x, y);
+
   background(0);
   socket = io.connect('http://localhost:3000');
   socket.on('mouse', newDrawing);
@@ -20,13 +25,14 @@ function playerDisconnected(data){
 }
 
 function drawPlayer(data){
+  noStroke();
   fill(0, 0, 200);  
   ellipse(data.x, data.y, 30, 30);
 }
 
 function newDrawing(data){
-  noStroke();
   fill(255, 0, 100);
+  noStroke();
   ellipse(data.x, data.y, 10, 10);
 }
 
@@ -46,6 +52,8 @@ function draw() {
   if (keyIsDown(DOWN_ARROW)) {
     posY += 5;
   }
+  
+  noStroke();
   socket.emit('player', {x:posX, y:posY});
   fill(0, 200, 0);
   ellipse(posX, posY, 30, 30);
