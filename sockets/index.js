@@ -15,11 +15,23 @@ function newConnection(socket){
   //console.log(socket);
   console.log(socket.id);
   socket.on('mouse', mouseMsg);
+  socket.on('player', playerMsg);  
+  
+  function playerMsg(data){
+    socket.broadcast.emit('player', data); 
+  }
+
   function mouseMsg(data) {
     console.log(data);
     socket.broadcast.emit('mouse', data);
-
     // io.sockets.emit('mouse', data); // emits back to self
   }
+  
+  // client disconencted
+  socket.on('disconnect', function() {
+      socket.broadcast.emit('playerGone', {});
+      console.log("player disconnected");
+    }
+  )
 }
 

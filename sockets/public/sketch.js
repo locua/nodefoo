@@ -1,11 +1,28 @@
 var socket;
+let w = h = 800
+let posX = getRandInt(w);
+let posY = getRandInt(h);
+
+function getRandInt(max){
+  return Math.floor(Math.random()*max);
+}
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(w, h);
   background(0);
-
   socket = io.connect('http://localhost:3000');
   socket.on('mouse', newDrawing);
+  socket.on('player', drawPlayer);
+  socket.on('playerGone', playerDisconnected);
+
+}
+function playerDisconnected(data){
+  background(0); 
+}
+
+function drawPlayer(data){
+  fill(0, 0, 200);  
+  ellipse(data.x, data.y, 30, 30);
 }
 
 function newDrawing(data){
@@ -14,7 +31,14 @@ function newDrawing(data){
   ellipse(data.x, data.y, 10, 10);
 }
 
+function update(){
+
+}
+
 function draw() {
+  socket.emit('player', {x:posX, y:posY});
+  fill(0, 200, 0);
+  ellipse(posX, posY, 30, 30);
 }
 
 function mouseDragged(){
