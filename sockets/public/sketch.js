@@ -11,7 +11,6 @@ function getRandInt(max){
 
 function setup() {
   let cnv = createCanvas(w, h);
-  cnv.setPosition
   var x = (windowWidth - width) / 2;
   var y = (windowHeight - height) / 2;
   cnv.position(x, y);
@@ -19,7 +18,7 @@ function setup() {
   background(0);
   socket = io.connect('http://localhost:3000');
   socket.on('mouse', newDrawing);
-  socket.on('player', drawPlayer);
+  socket.on('player', updatePlayer);
   socket.on('playerGone', playerDisconnected);
   socket.on('clientJoined', createPlayer);
   socket.emit('clientJoined', {x:posX, y:posY});
@@ -27,18 +26,23 @@ function setup() {
   playerDictionary["0"] = new Player(posX, posY);
 
 }
+function updatePlayer(data){
+  //console.log(data.id);
+  playerDictionary[data.id].x = data.x;
+  playerDictionary[data.id].y = data.y;
+}
 
 function createPlayer(data){
-  playerDictionary[data.id] = Player(data.x, data.y);
+  playerDictionary[data.id] = new Player(data.x, data.y);
+  socket.emit('clientJoined', {x:posX, y:posY});
 }
 
 function playerDisconnected(data){
-  background(0); 
+  console.log("deleting player");
+  delete playerDictionary[data.id];
+  console.log(playerDictionary);
 }
 
-function drawPlayer(data){
-  player=true;
-}
 
 function newDrawing(data){
   fill(255, 0, 100);
@@ -52,26 +56,34 @@ function update(){
 function draw() {
   background(0);
   if (keyIsDown(LEFT_ARROW)) {
-    posX -= 5;
+    playerDictionary["0"].x -= 5;
   }
   if (keyIsDown(RIGHT_ARROW)) {
-    posX += 5;
+    playerDictionary["0"].x += 5;
   }
   if (keyIsDown(UP_ARROW)) {
-    posY -= 5;
+    playerDictionary["0"].y  -= 5;
   }
   if (keyIsDown(DOWN_ARROW)) {
-    posY += 5;
+    playerDictionary["0"].y  += 5;
   }
   
   noStroke();
   fill(0, 0, 200);  
   //ellipse(data.x, data.y, 30, 30);
+  fill(0, 200, 0);
+
+  // loop over players and call draw function
+  for(let [key, player] of Object.entries(playerDictionary)){
+    player.draw();
+  }
 
   noStroke();
-  socket.emit('player', {x:posX, y:posY});
-  fill(0, 200, 0);
-  ellipse(posX, posY, 30, 30);
+  socket.emit('player', {
+      x:playerDictionary["0"].x ,
+      y:playerDictionary["0"].y 
+    }
+  );
 }
 
 function mouseDragged(){

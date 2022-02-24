@@ -15,8 +15,8 @@ function newConnection(socket){
   //console.log(socket);
   console.log(socket.id);
   socket.on('mouse', mouseMsg);
-  socket.on('player', playerMsg);  
   socket.on('clientJoined', clientJoined);
+  socket.on('player', playerMsg);  
 
   function clientJoined(data){
     socket.broadcast.emit('clientJoined', {id:socket.id, x:data.x, y:data.y})
@@ -24,7 +24,7 @@ function newConnection(socket){
 
   
   function playerMsg(data){
-    socket.broadcast.emit('player', data); 
+    socket.broadcast.emit('player', {x:data.x, y:data.y, id:socket.id}); 
   }
 
   function mouseMsg(data) {
@@ -35,7 +35,7 @@ function newConnection(socket){
   
   // client disconencted
   socket.on('disconnect', function() {
-      socket.broadcast.emit('playerGone', {});
+      socket.broadcast.emit('playerGone', {id:socket.id});
       console.log("player disconnected");
     }
   )
