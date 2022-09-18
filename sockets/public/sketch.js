@@ -1,4 +1,4 @@
-var socket;
+let socket;
 let w = h = 800
 let posX = getRandInt(w);
 let posY = getRandInt(h);

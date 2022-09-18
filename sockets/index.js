@@ -6,7 +6,7 @@ var server = app.listen(3000);
 
 app.use(express.static('public'));
 
-console.log("server running on port blah blah");
+console.log("server running on port 3000");
 
 var io = socket(server);
 io.sockets.on('connection', newConnection);
